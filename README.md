@@ -1,49 +1,49 @@
-# MyContent MVP – Système de recommandation d’articles (Content-Based)
+# **MyContent MVP – Article Recommendation System (Content-Based)**
 
-Ce projet met en œuvre un système de recommandation d’articles basé sur la **similarité de contenu** entre les articles, en utilisant des **embeddings vectoriels stockés sur Azure Blob Storage**.
-
----
-
-## Fonctionnalités
-
-- Recommandation de 5 articles personnalisés via similarité d'embeddings
-- Approche content-based avec vecteurs d’articles pré-calculés
-- Embeddings stockés sur Azure Blob Storage et chargés dynamiquement
-- Interface utilisateur locale en Streamlit
-- Données utilisateurs et articles issues de jeux de données publics
+This project implements an article recommendation system based on **content similarity**, using **vector embeddings stored on Azure Blob Storage**.
 
 ---
 
-## Structure du dépôt
+## Features
+
+* Personalized recommendation of 5 articles using embedding similarity
+* Content-based approach with precomputed article vectors
+* Embeddings stored in Azure Blob Storage and dynamically loaded
+* Local user interface built with Streamlit
+* User and article datasets based on public data sources
+
+---
+
+## Repository Structure
 
 ```
 my_content_mvp/
 │
-├── azure_function/                  # Code de la fonction Azure (backend)
-│   ├── function_app.py              # Script principal avec la logique de recommandation
-│   ├── requirements.txt             # Dépendances nécessaires à l'exécution sur Azure
-│   ├── host.json                    # Fichier de configuration pour Azure Functions
-│   ├── .funcignore                  # Fichiers à ignorer lors du déploiement sur Azure
+├── azure_function/                  # Azure Function backend
+│   ├── function_app.py              # Main script containing the recommendation logic
+│   ├── requirements.txt             # Dependencies required for Azure execution
+│   ├── host.json                    # Azure Functions configuration file
+│   ├── .funcignore                  # Files ignored during Azure deployment
 │   └── data/
-│       ├── clicks_sample.csv        # Données d’interactions utilisateur/article
-│       └── articles_metadata.csv    # Métadonnées des articles
+│       ├── clicks_sample.csv        # User/article interaction data
+│       └── articles_metadata.csv    # Article metadata
 │
-├── streamlit_app/                   # Application Streamlit pour tester l'API
-│   ├── app.py                       # Interface utilisateur avec appel à l'API Azure
+├── streamlit_app/                   # Streamlit app for testing the API
+│   ├── app.py                       # User interface calling the Azure API
 │   └── data/
-│       └── users.csv                # Liste des identifiants utilisateurs utilisés dans l'interface
+│       └── users.csv                # List of user IDs used in the interface
 │
-├── notebook.ipynb                   # Notebook exploratoire avec tests et comparaison des modèles
-├── deploy_function.sh               # Script CLI pour déploiement rapide de l'azure function via terminal
-├── .gitignore                       # Fichiers/dossiers exclus du versioning
-└── README.md                        # Documentation du projet
+├── notebook.ipynb                   # Exploratory notebook with tests and model comparisons
+├── deploy_function.sh               # CLI script for quick Azure Function deployment
+├── .gitignore                       # Files/folders excluded from versioning
+└── README.md                        # Project documentation
 ```
 
 ---
 
-## 🔧 Installation & exécution
+## 🔧 Installation & Execution
 
-### 1. Cloner le projet
+### 1. Clone the project
 
 ```bash
 git clone https://github.com/rafiksiala/my_content_mvp.git
@@ -52,7 +52,7 @@ cd my_content_mvp
 
 ---
 
-### 2. Lancer l’interface Streamlit
+### 2. Launch the Streamlit interface
 
 ```bash
 cd streamlit_app
@@ -62,42 +62,42 @@ streamlit run app.py
 
 ---
 
-### 3. Déployer la fonction Azure
+### 3. Deploy the Azure Function
 
-L’Azure Function est déclenchée par une requête HTTP. Elle :
+The Azure Function is triggered by an HTTP request. It:
 
-- télécharge dynamiquement les embeddings depuis Azure Blob Storage,
-- calcule la similarité entre les articles lus par un utilisateur,
-- retourne les 5 articles les plus pertinents.
+* downloads embeddings dynamically from Azure Blob Storage,
+* computes similarity between articles read by a user,
+* returns the 5 most relevant articles.
 
-#### Méthode 1 — Déploiement via Visual Studio Code (recommandée si vous travaillez seul)
+#### Method 1 — Deployment via Visual Studio Code (recommended when working alone)
 
-1. Ouvrir le projet dans VSCode
-2. Clic droit sur le dossier `azure_function`
-3. Sélectionner **"Deploy to Function App"**
-4. Choisir l'application `my-content-func`
+1. Open the project in VSCode
+2. Right-click on the folder `azure_function`
+3. Select **"Deploy to Function App"**
+4. Choose the application `my-content-func`
 
-> Cette méthode rapide et visuelle est idéale pour un usage local sans configuration complexe.
+> This fast, visual method is ideal for local use without complex setup.
 
-#### Méthode 2 — Déploiement automatisé via terminal
+#### Method 2 — Automated deployment via terminal
 
-Exécuter le script suivant depuis la racine du projet :
+Run the following script from the project root:
 
 ```bash
 ./deploy_function.sh
 ```
 
-Ce script :
+This script:
 
-- vérifie si vous êtes connecté à Azure (`az account show`)
-- lance `az login --use-device-code` si nécessaire
-- publie la fonction avec `func azure functionapp publish my-content-func`
+* checks if you're logged in (`az account show`)
+* triggers `az login --use-device-code` if necessary
+* publishes the function via `func azure functionapp publish my-content-func`
 
-> Parfait pour les automatisations ou intégrations CI/CD.
+> Perfect for automation or CI/CD pipelines.
 
 ---
 
-### 4. Tester l’API
+### 4. Test the API
 
 ```http
 GET https://my-content-func.azurewebsites.net/api/recommend_articles?user_id=0
@@ -105,34 +105,35 @@ GET https://my-content-func.azurewebsites.net/api/recommend_articles?user_id=0
 
 ---
 
-## Architecture technique
+## Technical Architecture
 
-- **Backend** : Azure Functions en Python
-- **Frontend** : Streamlit (Python)
-- **Stockage** : Azure Blob Storage pour les embeddings
-- **Modèle** : Approche content-based avec similarité cosinus
+* **Backend:** Azure Functions (Python)
+* **Frontend:** Streamlit (Python)
+* **Storage:** Azure Blob Storage for embeddings
+* **Model:** Content-based approach using cosine similarity
 
 ---
 
-## Notebook exploratoire
+## Exploratory Notebook
 
-Un **notebook exploratoire** est inclus dans le dépôt.
-Il contient les tests comparatifs des différentes approches de recommandation :
+An **exploratory notebook** is included in the repository.
+It contains comparative tests of several recommendation approaches:
 
-* Popularité (baseline)
-* Filtrage collaboratif (SVD, NMF, KNN, ALS)
-* Content-based avec embeddings vectoriels
+* Popularity-based (baseline)
+* Collaborative filtering (SVD, NMF, KNN, ALS)
+* Content-based using vector embeddings
 
-Le code a été structuré en fonctions claires pour faciliter la lecture et la réutilisation
+The code is structured in clear, reusable functions to improve readability.
 
-> Ce notebook permet de **visualiser les performances comparées** (Recall, MAP, MRR, Coverage) et **justifie le choix du modèle content-based** retenu pour le MVP.
- 
+> This notebook allows you to **visualize comparative performance** (Recall, MAP, MRR, Coverage) and **justifies the choice of the content-based model** adopted for the MVP.
+
 ---
 
-## Évolutions possibles
+## Possible Improvements
 
-- API REST complète (POST, logs, ajout d’utilisateur)
-- Mise à jour dynamique des embeddings
-- Base de données temps réel
-- Recombinaison content + collaborative filtering
-- Interface mobile ou progressive web app (PWA)
+* Full REST API (POST, logs, user creation)
+* Dynamic embedding updates
+* Real-time database
+* Combination of content-based + collaborative filtering
+* Mobile interface or progressive web app (PWA)
+
